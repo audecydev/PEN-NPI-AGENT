@@ -1,0 +1,16 @@
+{
+  "name": "pen-npi-agent",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/core", "apps/web", "apps/api"],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "build:artifact": "npm run build:artifact -w apps/web",
+    "dev:web": "npm run dev -w apps/web",
+    "dev:api": "npm run dev -w apps/api",
+    "cad:export": "python3 packages/cad-export/export.py"
+  }
+}
