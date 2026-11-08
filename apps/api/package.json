@@ -15,6 +15,7 @@
     "vitest": "^2.1.8"
   },
   "dependencies": {
+    "@fastify/cors": "^11.4.1",
     "@pen-npi/core": "^2.0.0",
     "fastify": "^5.1.0"
   }

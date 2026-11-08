@@ -2,6 +2,7 @@
 // OpenCascade kernel (Python, packages/cad-export) and so cannot run in a browser.
 
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 import { execFile } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -39,6 +40,27 @@ function body(req: { body: unknown }) {
 
 export function buildApp() {
   const app = Fastify({ logger: { level: process.env.LOG_LEVEL ?? "info" } });
+
+  app.register(cors, {
+    origin: (origin, cb) => {
+      // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin) return cb(null, true);
+      const allowed = [
+        "https://pen-npi-agent.pages.dev",
+        "http://localhost:5173",
+        "http://localhost:8787",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8787",
+      ];
+      if (allowed.includes(origin) || origin.endsWith(".pages.dev")) {
+        return cb(null, true);
+      }
+      return cb(null, true); // Allow all during demo/workbench testing
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    credentials: true,
+  });
 
   app.get("/api/health", async () => ({ ok: true, archive: ARCHIVE_ALL.length, releases: loadReleases().length }));
   app.get("/api/scenarios", async () => SCENARIOS_ALL.map(({ id, group, name, shows, brief, spec }) => ({ id, group, name, shows, brief, spec })));

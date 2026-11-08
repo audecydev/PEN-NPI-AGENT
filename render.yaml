@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: pen-npi-api
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && pip install build123d
+    startCommand: npm run start -w apps/api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8787
+      - key: PYTHON
+        value: python3
+      - key: LOG_LEVEL
+        value: info
